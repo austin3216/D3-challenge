@@ -41,11 +41,22 @@ d3.csv("data.csv").then(function(News) {
     var bottomAxis = d3.axisBottom(xLinearScale);
     var leftAxis = d3.axisLeft(yLinearScale);
 
-     // Append axes
+     // Append axes to chart
     chartGroup.append("g").attr("transform", `translate(0, ${height})`).call(bottomAxis);
     chartGroup.append("g").call(leftAxis);
 
-
+    // Create data circles
+    var circle= chartGroup.selectAll("circle")
+    .data(News)
+    .enter()
+    .append("circle")
+    .attr("cx", d => xLinearScale(d.smokes))
+    .attr("cy", (d, i) => { console.log(i); return yLinearScale(d.age)})
+    .attr("r", "15")
+    .attr("fill", "blue")
+    .attr("stroke", "grey")
+    .attr("stroke-width", "3")
+    .attr("opacity", ".75");
 
 
 
