@@ -37,4 +37,19 @@ d3.csv("data.csv").then(function(News) {
     var xLinearScale = d3.scaleLinear().domain([5, d3.max(News, d => d.smokes)]).range([0, width]);
     var yLinearScale = d3.scaleLinear().domain([28, d3.max(News, d => d.age)]).range([height, 0]);
 
+    // Create left and bottom axis
+    var bottomAxis = d3.axisBottom(xLinearScale);
+    var leftAxis = d3.axisLeft(yLinearScale);
+
+     // Append axes
+    chartGroup.append("g").attr("transform", `translate(0, ${height})`).call(bottomAxis);
+    chartGroup.append("g").call(leftAxis);
+
+
+
+
+
+
+
+
 });
