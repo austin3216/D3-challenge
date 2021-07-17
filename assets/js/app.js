@@ -16,7 +16,7 @@ var width = svgWidth - margin.left - margin.right;
 var height = svgHeight - margin.top - margin.bottom;
 
 // SVG wrapper, append SVG group to hold chart
-var svg = d3.select("scatter").append("svg").attr("width", svgWidth).attr("height", svgHeight);
+var svg = d3.select(".scatter").append("svg").attr("width", svgWidth).attr("height", svgHeight);
 
 const chartGroup = svg.append("g")
   .attr("transform", `translate(${margin.left}, ${margin.top})`);
