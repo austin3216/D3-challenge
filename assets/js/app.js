@@ -16,10 +16,7 @@ var width = svgWidth - margin.left - margin.right;
 var height = svgHeight - margin.top - margin.bottom;
 
 // SVG wrapper, append SVG group to hold chart
-var svg = d3.select(".chart")
-  .append("svg")
-  .attr("width", svgWidth)
-  .attr("height", svgHeight);
+var svg = d3.select("scatter").append("svg").attr("width", svgWidth).attr("height", svgHeight);
 
 const chartGroup = svg.append("g")
   .attr("transform", `translate(${margin.left}, ${margin.top})`);
@@ -32,9 +29,12 @@ d3.csv("data.csv").then(function(News) {
     News.forEach(function(data) {
         data.age = +data.age;
         data.smokes = +data.smokes;   
-      });
+    });
 
+    let copyNews = JSON.parse(JSON.stringify(News));
 
-
+    // Create x and y scale functions  
+    var xLinearScale = d3.scaleLinear().domain([5, d3.max(News, d => d.smokes)]).range([0, width]);
+    var yLinearScale = d3.scaleLinear().domain([28, d3.max(News, d => d.age)]).range([height, 0]);
 
 });
