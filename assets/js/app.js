@@ -27,3 +27,14 @@ const chartGroup = svg.append("g")
 // Import CSV
 d3.csv("data.csv").then(function(News) {
     console.log(News);
+
+    // Parse data to return numbers
+    News.forEach(function(data) {
+        data.age = +data.age;
+        data.smokes = +data.smokes;   
+      });
+
+
+
+
+});
