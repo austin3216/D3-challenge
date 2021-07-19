@@ -94,7 +94,16 @@ function updateToolTip(selXAxis, selYAxis, circleGroup, circleGroupText) {
     }
 
     // create tooltip
-    
+    var toolTip = d3.tip().offset([120, -60]).attr("class", "tooltip").html(function(d) {
+        if (selXAxis === "age") {
+            return (`${d.state}<hr>${xlabel} ${d[selXAxis]}<br>${ylabel}${d[selYAxis]}%`);
+        } 
+        else if (selXAxis !== "poverty" && selXAxis !== "age") {
+            return (`${d.state}<hr>${xlabel}$${d[selXAxis]}<br>${ylabel}${d[selYAxis]}%`);
+        } 
+        else {
+            return (`${d.state}<hr>${xlabel}${d[selXAxis]}%<br>${ylabel}${d[selYAxis]}%`);
+        }   
 
 
 
