@@ -13,7 +13,6 @@ var selYAxis = "healthcare";
 
 // X scale function to update based on what label is clicked
 function xScale(data, selXAxis, chartWidth) {
-    // Create scales.
     var xLinearScale = d3.scaleLinear()
         .domain([d3.min(data, d => d[selXAxis]) * .8, d3.max(data, d => d[selXAxis]) * 1.1]).range([0, chartWidth]);
     return xLinearScale;
@@ -52,7 +51,7 @@ function renderText(circleGroupText, newXAxis, newYAxis, selXAxis, selYAxis) {
 }
 
 // Tooltip update function
-function updateToolTip(selXAxis, selYAxis, circleGroup, circleGroupText) {
+function updateToolTip(selXAxis, selYAxis, circleGroup, textGroup) {
     // x axis conditional
     if (selXAxis === "poverty") {
         var xlabel = "Poverty Level (%): ";
@@ -72,17 +71,20 @@ function updateToolTip(selXAxis, selYAxis, circleGroup, circleGroupText) {
     }
 
     // create tooltip
-    var toolTip = d3.tip().offset([120, -60]).attr("class", "d3-tip").html(function(d) {
-        if (selXAxis === "age") {
-            return (`${d.state}<hr>${xlabel} ${d[selXAxis]}<br>${ylabel}${d[selYAxis]}%`);
-        } 
-        else if (selXAxis !== "poverty" && selXAxis !== "age") {
-            return (`${d.state}<hr>${xlabel}$${d[selXAxis]}<br>${ylabel}${d[selYAxis]}%`);
-        } 
-        else {
-            return (`${d.state}<hr>${xlabel}${d[selXAxis]}%<br>${ylabel}${d[selYAxis]}%`);
-        }   
-    });
+    var toolTip = d3.tip()
+        .offset([120, -60])
+        .attr("class", "d3-tip")
+        .html(function(d) {
+            if (selXAxis === "age") {
+                return (`${d.state}<hr>${xlabel} ${d[selXAxis]}<br>${ylabel}${d[selYAxis]}%`);
+            } 
+            else if (selXAxis !== "poverty" && selXAxis !== "age") {
+                return (`${d.state}<hr>${xlabel}$${d[selXAxis]}<br>${ylabel}${d[selYAxis]}%`);
+            } 
+            else {
+                return (`${d.state}<hr>${xlabel}${d[selXAxis]}%<br>${ylabel}${d[selYAxis]}%`);
+            }   
+        });
 
     // Call the tooltip with the Circle Group
     circleGroup.call(toolTip);
@@ -96,7 +98,7 @@ function updateToolTip(selXAxis, selYAxis, circleGroup, circleGroupText) {
             toolTip.hide(data);
         });
 
-    circleGroupText
+    textGroup
         .on("mouseover", function(data) {
             toolTip.show(data, this);
         })
@@ -118,6 +120,7 @@ function responsiveChart() {
         svgArea.remove();
     }
 
+    // SVG parameters based on window size
     var svgWidth = 960;
     var svgHeight = 500;
     
@@ -180,14 +183,15 @@ function responsiveChart() {
         var circle = bindData.append("circle")
             .attr("cx", d => xLinearScale(d[selXAxis]))
             .attr("cy", d => yLinearScale(d[selYAxis]))
-            .attr("r", 10)
+            .attr("r", 15)
             .classed("stateCircle", true);
     
         // data circles text - create and add to circles
         var circleTxt = bindData.append("text")
             .text(d => d.abbr)
-            .attr("dx", d => xLinearScale(d[selXAxis]))
-            .attr("dy", d => yLinearScale(d[selYAxis]))
+            .attr("x", d => xLinearScale(d[selXAxis]))
+            .attr("y", d => yLinearScale(d[selYAxis]))
+            .attr("dy", ".30em")
             .classed("stateText", true);
         
         // update tooltip    
@@ -200,7 +204,7 @@ function responsiveChart() {
 
         var povertyXAxis = xAxisLabels.append("text")
             .attr("x", 0)
-            .attr("y", 40)
+            .attr("y", 20)
             // value for event listener
             .attr("value", "poverty")
             .text("Poverty Level (%)")
@@ -208,42 +212,42 @@ function responsiveChart() {
 
         var ageXAxis = xAxisLabels.append("text")
             .attr("x", 0)
-            .attr("y", 60)
+            .attr("y", 40)
             .attr("value", "age")
             .text("Median Age")
             .classed("inactive", true);
 
         var incomeXAxis = xAxisLabels.append("text")
             .attr("x", 0)
-            .attr("y", 80)
+            .attr("y", 60)
             .attr("value", "income")
             .text("Median Household Income")
             .classed("inactive", true);
 
         // Create y axis labels (healthcare, smoking, obesity; healthcare is initial)
 
-        var yAxisLabels = chartGroup.append("g");
+        var yAxisLabels = chartGroup.append("g").attr("transform", "rotate(-90)");
 
         var healthcareYAxis = yAxisLabels.append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("x", -(chartHeight / 2))
-            .attr("y", -40)
+            .attr("x", 0 - (chartHeight / 2))
+            .attr("y", 40 - margin.left)
+            .attr("dy", "1em")
             .attr("value", "healthcare")
             .text("% Without Healthcare")
             .classed("active", true);
     
         var smokeYAxis = yAxisLabels.append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("x", -(chartHeight / 2))
-            .attr("y", -60)
+            .attr("x", 0 - (chartHeight / 2))
+            .attr("y", 20 - margin.left)
+            .attr("dy", "1em")
             .attr("value", "smokes")
             .text("% Smokers")
             .classed("inactive", true);
     
         var obesityYAxis = yAxisLabels.append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("x", -(chartHeight / 2))
-            .attr("y", -80)
+            .attr("x", 0 - (chartHeight / 2))
+            .attr("y", 0 - margin.left)
+            .attr("dy", "1em")
             .attr("value", "obesity")
             .text("Obesity Level (%)")
             .classed("inactive", true);
