@@ -137,11 +137,128 @@ let selYAxis = "healthcare";
       .text("Obesity Level (%)")
       .classed("inactive", true);
 
-    
+    // Create tooltips
+    circleGroup = updateToolTip(circleGroup, selXAxis, selYAxis);
 
+    // Create event listener for x axis
+    xAxisLabels.selectAll("text").on("click", function() {
+        const selection = d3.select(this).attr("value");
+        // conditionals to change x axis by selection
+        if (selection !== selXAxis) {
 
+            // puts "value" on x axis (attribute defined in xAxisLabels and yAxisLabels)
+            selXAxis = value;
 
+            // update the scale of x axis based on data
+            xLinearScale = xScale(csvData, selXAxis);
 
+            // renders the x axis
+            xAxis = renderXAxis(xLinearScale, xAxis);
 
+            // updates circles with new x axis data
+            circleLoc = renderXCircles(circleLoc, xLinearScale, selXAxis);
 
+            // updates circle text with new x axis data
+            circleTxt = renderXText(circleTxt, xLinearScale, selXAxis);
+
+            // updates tooltip
+            circleGroup = updateToolTip(circleGroup, selXAxis, selYAxis);
+
+            // updates label appearance based on active/inactive
+            if (selXAxis === "age") {
+                povertyXAxis
+                    .classed("active", false)
+                    .classed("inactive", true);
+                ageXAxis
+                    .classed("active", true)
+                    .classed("inactive", false);
+                incomeXAxis
+                    .classed("active", false)
+                    .classed("inactive", true);
+            }
+            else if (selXAxis === "income") {
+                povertyXAxis
+                    .classed("active", false)
+                    .classed("inactive", true);
+                ageXAxis
+                    .classed("active", false)
+                    .classed("inactive", true);
+                incomeXAxis
+                    .classed("active", true)
+                    .classed("inactive", false);
+            }
+            else {
+                povertyXAxis
+                    .classed("active", true)
+                    .classed("inactive", false);
+                ageXAxis
+                    .classed("active", false)
+                    .classed("inactive", true);
+                incomeXAxis
+                    .classed("active", false)
+                    .classed("inactive", true);
+            }
+        }
+    });
+
+    // Create event listener for y axis
+    yAxisLabels.selectAll("text").on("click", function() {
+        const selection = d3.select(this).attr("value");
+        // conditionals to change x axis by selection
+        if (selection !== selYAxis) {
+
+            // puts "value" on y axis (attribute defined in xAxisLabels and yAxisLabels)
+            selYAxis = value;
+
+            // update the scale of x axis based on data
+            yLinearScale = yScale(csvData, selYAxis);
+
+            // renders the x axis
+            yAxis = renderYAxis(yLinearScale, yAxis);
+
+            // updates circles with new x axis data
+            circleLoc = renderYCircles(circleLoc, yLinearScale, selYAxis);
+
+            // updates circle text with new x axis data
+            circleTxt = renderYText(circleTxt, yLinearScale, selYAxis);
+
+            // updates tooltip
+            circleGroup = updateToolTip(circleGroup, selXAxis, selYAxis);
+
+            // updates label appearance based on active/inactive
+            if (selYAxis === "smokes") {
+                healthcareYAxis
+                    .classed("active", false)
+                    .classed("inactive", true);
+                smokeYAxis
+                    .classed("active", true)
+                    .classed("inactive", false);
+                obesityYAxis
+                    .classed("active", false)
+                    .classed("inactive", true);
+            }
+            else if (selYAxis === "obesity") {
+                healthcareYAxis
+                    .classed("active", false)
+                    .classed("inactive", true);
+                smokeYAxis
+                    .classed("active", false)
+                    .classed("inactive", true);
+                obesityYAxis
+                    .classed("active", true)
+                    .classed("inactive", false);
+            }
+            else {
+                healthcareYAxis
+                    .classed("active", true)
+                    .classed("inactive", false);
+                smokeYAxis
+                    .classed("active", false)
+                    .classed("inactive", true);
+                obesityYAxis
+                    .classed("active", false)
+                    .classed("inactive", true);
+            }
+        }
+    });
 })();
