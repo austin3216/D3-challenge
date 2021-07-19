@@ -121,8 +121,8 @@ function responsiveChart() {
     }
 
     // SVG parameters based on window size
-    var svgWidth = 960;
-    var svgHeight = 500;
+    var svgWidth = 1000;
+    var svgHeight = 750;
     
     var margin = {
         top: 50,
