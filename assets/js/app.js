@@ -1,43 +1,57 @@
 // @TODO: YOUR CODE HERE!
 
+// NOTE -> working with var vs const vs let https://www.freecodecamp.org/news/var-let-and-const-whats-the-difference/
+
 // Create SVG size and attributes
 
-var svgWidth = 960;
-var svgHeight = 500;
+const svgWidth = 960;
+const svgHeight = 500;
 
-var margin = {
-  top: 20,
-  right: 40,
-  bottom: 60,
-  left: 100
+const margin = {
+    top: 20,
+    right: 40,
+    bottom: 60,
+    left: 100
 };
 
-var width = svgWidth - margin.left - margin.right;
-var height = svgHeight - margin.top - margin.bottom;
+const width = svgWidth - margin.left - margin.right;
+const height = svgHeight - margin.top - margin.bottom;
 
 // SVG wrapper, append SVG group to hold chart
-var svg = d3.select("#scatter").append("svg").attr("width", svgWidth).attr("height", svgHeight);
+const svg = d3.select("#scatter")
+    .append("svg")
+    .attr("width", svgWidth)
+    .attr("height", svgHeight);
 
 const chartGroup = svg.append("g")
-  .attr("transform", `translate(${margin.left}, ${margin.top})`);
+    .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-// Import CSV
-d3.csv("data.csv").then(function(News) {
-    console.log(News);
+// Set initial axis parameters
+let selXAxis = "poverty";
+let selYAxis = "healthcare";
 
+// NOTE -> working with async functions https://www.w3schools.com/JS//js_async.asp
+
+(async function(){
+
+// Import CSV data
+    const csvData = await d3.csv("assets/data/data.csv");
+    
     // Parse data to return numbers
-    News.forEach(function(data) {
+    csvData.forEach(function(data) {
+        data.poverty = +data.poverty;
+        data.healthcare = +data.healthcare;
         data.age = +data.age;
-        data.smokes = +data.smokes;   
+        data.smokes = +data.smokes;
+        data.obesity = +data.obesity;
+        data.income = +data.income;   
     });
 
-    let copyNews = JSON.parse(JSON.stringify(News));
+    // Create scale functions  
+    var xLinearScale = xScale(csvData, selXAxis);
+    var yLinearScale = yScale(csvData, selYAxis);
 
-    // Create x and y scale functions  
-    var xLinearScale = d3.scaleLinear().domain([5, d3.max(News, d => d.smokes)]).range([0, width]);
-    var yLinearScale = d3.scaleLinear().domain([28, d3.max(News, d => d.age)]).range([height, 0]);
-
-    // Create left and bottom axis
+    // Create axis functions
     var bottomAxis = d3.axisBottom(xLinearScale);
     var leftAxis = d3.axisLeft(yLinearScale);
 
@@ -63,4 +77,4 @@ d3.csv("data.csv").then(function(News) {
 
 
 
-});
+})();
