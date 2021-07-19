@@ -48,16 +48,19 @@ let selYAxis = "healthcare";
     });
 
     // Create scale functions  
-    var xLinearScale = xScale(csvData, selXAxis);
-    var yLinearScale = yScale(csvData, selYAxis);
+    let xLinearScale = xScale(csvData, selXAxis);
+    let yLinearScale = yScale(csvData, selYAxis);
 
     // Create axis functions
-    var bottomAxis = d3.axisBottom(xLinearScale);
-    var leftAxis = d3.axisLeft(yLinearScale);
+    let bottomAxis = d3.axisBottom(xLinearScale);
+    let leftAxis = d3.axisLeft(yLinearScale);
 
      // Append axes to chart
-    chartGroup.append("g").attr("transform", `translate(0, ${height})`).call(bottomAxis);
-    chartGroup.append("g").call(leftAxis);
+    let xAxis = chartGroup.append("g")
+        .attr("transform", `translate(0, ${height})`)
+        .call(bottomAxis);
+    
+    let yAxis = chartGroup.append("g").call(leftAxis);
 
     // Create data circles
     var circle= chartGroup.selectAll("circle")
