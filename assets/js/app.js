@@ -72,7 +72,7 @@ function updateToolTip(selXAxis, selYAxis, circleGroup, circleGroupText) {
     }
 
     // create tooltip
-    var toolTip = d3.tip().offset([120, -60]).attr("class", "tooltip").html(function(d) {
+    var toolTip = d3.tip().offset([120, -60]).attr("class", "d3-tip").html(function(d) {
         if (selXAxis === "age") {
             return (`${d.state}<hr>${xlabel} ${d[selXAxis]}<br>${ylabel}${d[selYAxis]}%`);
         } 
@@ -181,14 +181,14 @@ function responsiveChart() {
             .attr("cx", d => xLinearScale(d[selXAxis]))
             .attr("cy", d => yLinearScale(d[selYAxis]))
             .attr("r", 10)
-            .classed("dataCircle", true);
+            .classed("stateCircle", true);
     
         // data circles text - create and add to circles
         var circleTxt = bindData.append("text")
             .text(d => d.abbr)
             .attr("dx", d => xLinearScale(d[selXAxis]))
             .attr("dy", d => yLinearScale(d[selYAxis]))
-            .classed("circleText", true);
+            .classed("stateText", true);
         
         // update tooltip    
         var circleGroup = updateToolTip(selYAxis, selYAxis, circle, circleTxt);
