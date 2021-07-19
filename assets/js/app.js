@@ -158,6 +158,31 @@ function responsiveChart() {
     
         var yAxis = chartGroup.append("g").call(leftAxis);
 
+        // Create data circles
+    
+        // data circles group - select data
+        var circleGroup = chartGroup.selectAll("circle")
+        .data(cvsData);
+
+        // bind data to group
+        var bindData = circleGroup.enter();
+
+        // data circles location - append according to CSV datapoints
+        var circle = bindData.append("circle")
+            .attr("cx", d => xLinearScale(d[selXAxis]))
+            .attr("cy", d => yLinearScale(d[selYAxis]))
+            .attr("r", 15)
+            .classed("dataCircle", true);
+    
+        // data circles text - create and add to circles
+        var circleTxt = bindData.append("text")
+            .text(d => d.abbr)
+            .attr("dx", d => xLinearScale(d[selXAxis]))
+            .attr("dy", d => yLinearScale(d[selYAxis]))
+            .classed("circleText", true);
+        
+            
+
     })  
 
 }
@@ -175,26 +200,7 @@ function responsiveChart() {
 
 
 
-//     // Create data circles
-    
-//     // data circles group - create and append to scatterplot
-//     let circleGroup = chartGroup.selectAll("g circle")
-//         .data(cvsData).enter()
-//         .append("g")
-    
-//     // data circles location - append according to CSV datapoints
-//     let circleLoc = circleGroup.append("circle")
-//         .attr("cx", d => xLinearScale(d[selXAxis]))
-//         .attr("cy", d => yLinearScale(d[selYAxis]))
-//         .attr("r", 20)
-//         .classed("dataCircle", true);
-    
-//     // data circles text - create and add to circles
-//     let circleTxt = circleGroup.append("text")
-//         .text(d => d.abbr)
-//         .attr("dx", d => xLinearScale(d[selXAxis]))
-//         .attr("dy", d => yLinearScale(d[selYAxis]))
-//         .classed("circleText", true);
+//     
    
 //     // Create x axis labels (poverty, age, income; poverty is initial)
 
