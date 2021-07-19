@@ -15,7 +15,7 @@ var selYAxis = "healthcare";
 function xScale(data, selXAxis, chartWidth) {
     // Create scales.
     var xLinearScale = d3.scaleLinear()
-        .domain([d3.min(data, d => d[selXAxis]), d3.max(data, d => d[chosenXAxis])]).range([0, chartWidth]);
+        .domain([d3.min(data, d => d[selXAxis]) * .8, d3.max(data, d => d[selXAxis]) * 1.1]).range([0, chartWidth]);
     return xLinearScale;
 }
 
@@ -29,7 +29,7 @@ function renderXAxes(newXAxis, xAxis) {
 // Y scale function to update based on what label is clicked
 function yScale(data, selYAxis, chartHeight) {
     // Create scales.
-    var yLinearScale = d3.scaleLinear().domain([d3.min(data, d => d[selYAxis]), d3.max(data, d => d[selYAxis])]).range([chartHeight, 0]);
+    var yLinearScale = d3.scaleLinear().domain([d3.min(data, d => d[selYAxis]) * .8, d3.max(data, d => d[selYAxis]) * 1.2]).range([chartHeight, 0]);
     return yLinearScale;
 }
 // X axis function to update based on what label is clicked
@@ -111,14 +111,21 @@ function updateToolTip(selXAxis, selYAxis, circleGroup, circleGroupText) {
 
 function responsiveChart() {
 
+    var svgArea = d3.select("#scatter").select("svg");
+
+    // Clear svg area - IMPORTANT!
+    if (!svgArea.empty()) {
+        svgArea.remove();
+    }
+
     var svgWidth = 960;
     var svgHeight = 500;
     
     var margin = {
-        top: 20,
-        right: 40,
-        bottom: 60,
-        left: 100
+        top: 50,
+        right: 50,
+        bottom: 100,
+        left: 80
     };
     
     var chartWidth = svgWidth - margin.left - margin.right;
@@ -164,7 +171,7 @@ function responsiveChart() {
     
         // data circles group - select data
         var circleGroup = chartGroup.selectAll("circle")
-        .data(cvsData);
+        .data(csvData);
 
         // bind data to group
         var bindData = circleGroup.enter();
@@ -173,7 +180,7 @@ function responsiveChart() {
         var circle = bindData.append("circle")
             .attr("cx", d => xLinearScale(d[selXAxis]))
             .attr("cy", d => yLinearScale(d[selYAxis]))
-            .attr("r", 15)
+            .attr("r", 10)
             .classed("dataCircle", true);
     
         // data circles text - create and add to circles
@@ -189,7 +196,7 @@ function responsiveChart() {
         // Create x axis labels (poverty, age, income; poverty is initial)
 
         var xAxisLabels = chartGroup.append("g")
-            .attr("transform", `translate(${chartWidth / 2}, ${chartHeight})`);
+            .attr("transform", `translate(${chartWidth / 2}, ${chartHeight + 20})`);
 
         var povertyXAxis = xAxisLabels.append("text")
             .attr("x", 0)
