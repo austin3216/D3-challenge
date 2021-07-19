@@ -30,7 +30,7 @@ const chartGroup = svg.append("g")
 let selXAxis = "poverty";
 let selYAxis = "healthcare";
 
-// NOTE -> working with async functions https://www.w3schools.com/JS//js_async.asp
+// NOTE -> working with async functions https://www.w3schools.com/JS//js_async.asp per tutor recommendation
 
 (async function(){
 
@@ -63,17 +63,26 @@ let selYAxis = "healthcare";
     let yAxis = chartGroup.append("g").call(leftAxis);
 
     // Create data circles
-    var circle= chartGroup.selectAll("circle")
-    .data(News)
-    .enter()
-    .append("circle")
-    .attr("cx", d => xLinearScale(d.smokes))
-    .attr("cy", (d, i) => { console.log(i); return yLinearScale(d.age)})
-    .attr("r", "15")
-    .attr("fill", "blue")
-    .attr("stroke", "grey")
-    .attr("stroke-width", "3")
-    .attr("opacity", ".75");
+    
+    // data circles group - create and append to scatterplot
+    let circleGroup = chartGroup.selectAll("g circle")
+        .data(cvsData).enter()
+        .append("g")
+    
+    // data circles location - append according to CSV datapoints
+    let circleLoc = circleGroup.append("circle")
+        .attr("cx", d => xLinearScale(d[selXAxis]))
+        .attr("cy", d => yLinearScale(d[selYAxis]))
+        .attr("r", 20)
+        .classed("dataCircle", true);
+    
+    // data circles text - create and add to circles
+    let circleTxt = circleGroup.append("text")
+        .text(d => d.abbr)
+        .attr("dx", d => xLinearScale(d[selXAxis]))
+        .attr("dy", d => yLinearScale(d[selYAxis]))
+        .classed("circleText", true);
+   
 
 
 
