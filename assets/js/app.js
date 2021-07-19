@@ -104,6 +104,31 @@ function updateToolTip(selXAxis, selYAxis, circleGroup, circleGroupText) {
         else {
             return (`${d.state}<hr>${xlabel}${d[selXAxis]}%<br>${ylabel}${d[selYAxis]}%`);
         }   
+    });
+
+    // Call the tooltip with the Circle Group
+    circleGroup.call(toolTip);
+
+    // Mouseover event listener for tooltip
+    circleGroup
+        .on("mouseover", function(data) {
+            toolTip.show(data, this);
+        })
+        .on("mouseout", function(data) {
+            toolTip.hide(data);
+        });
+
+    circleGroupText
+        .on("mouseover", function(data) {
+            toolTip.show(data, this);
+        })
+        .on("mouseout", function(data) {
+            toolTip.hide(data);
+        });
+
+    return circleGroup;
+};
+
 
 
 
