@@ -73,7 +73,28 @@ function renderText(circleGroupText, newXAxis, newYAxis, selXAxis, selYAxis) {
     return circleGroupText;
 }
 
+// Tooltip update function
+function updateToolTip(selXAxis, selYAxis, circleGroup, circleGroupText) {
+    // x axis conditional
+    if (selXAxis === "poverty") {
+        var xlabel = "Poverty Level (%): ";
+    } else if (selXAxis === "income") {
+        var xlabel = "Median Income: "
+    } else {
+        var xlabel = "Median Age: "
+    }
 
+    // y axis conditional
+    if (selYAxis === "healthcare") {
+        var ylabel = "Lacks Healthcare (%): ";
+    } else if (selYAxis === "smokes") {
+        var ylabel = "Smokers (%): "
+    } else {
+        var ylabel = "Obesity Level (%): "
+    }
+
+    // create tooltip
+    
 
 
 
