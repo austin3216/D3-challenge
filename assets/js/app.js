@@ -24,6 +24,7 @@ function renderXAxes(newXAxis, xAxis) {
     var bottomAxis = d3.axisBottom(newXAxis);
     xAxis.transition().duration(1000).call(bottomAxis);
     return xAxis;
+}
 
 // Y scale function to update based on what label is clicked
 function yScale(data, selYAxis, chartHeight) {
@@ -36,6 +37,7 @@ function renderYAxes(newYAxis, yAxis) {
     var leftAxis = d3.axisLeft(newYAxis);
     yAxis.transition().duration(1000).call(leftAxis);
     return yAxis;
+}
 
 // Circle Group function to update upon transition
 function renderCircles(circleGroup, newXAxis, newYAxis, selXAxis, selYAxis) {
@@ -238,151 +240,128 @@ function responsiveChart() {
             .attr("value", "obesity")
             .text("Obesity Level (%)")
             .classed("inactive", true);
+        
+        // Create event listener for x axis
+        xAxisLabels.selectAll("text").on("click", function() {
+            
+            // Get selected label
+            selXAxis = d3.select(this).attr("value");
+            
+            // Update x linear scale
+            xLinearScale = xScale(csvData, selXAxis, chartWidth);
 
+            // Render axis
+            xAxis = renderXAxes(xLinearScale, xAxis);
+            
+            // updates label based on active/inactive XAxis
+            if (selXAxis === "age") {
+                povertyXAxis
+                    .classed("active", false)
+                    .classed("inactive", true);
+                ageXAxis
+                    .classed("active", true)
+                    .classed("inactive", false);
+                incomeXAxis
+                    .classed("active", false)
+                    .classed("inactive", true);
+            }
+            else if (selXAxis === "income") {
+                povertyXAxis
+                    .classed("active", false)
+                    .classed("inactive", true);
+                ageXAxis
+                    .classed("active", false)
+                    .classed("inactive", true);
+                incomeXAxis
+                    .classed("active", true)
+                    .classed("inactive", false);
+            }
+            else {
+                povertyXAxis
+                    .classed("active", true)
+                    .classed("inactive", false);
+                ageXAxis
+                    .classed("active", false)
+                    .classed("inactive", true);
+                incomeXAxis
+                    .classed("active", false)
+                    .classed("inactive", true);
+            }
+            
+            // Update circles with x values
+            circle = renderCircles(circleGroup, xLinearScale, yLinearScale, selXAxis, selYAxis);
 
-    })  
+            // Update circles text with x values
+            circleTxt = renderText(circleTxt, xLinearScale, yLinearScale, selXAxis, selYAxis);
 
+            // Update tooltip
+            circleGroup = updateToolTip(selXAxis, selYAxis, circle, circleTxt);
+        });
+        
+        // Create event listener for y axis
+        yAxisLabels.selectAll("text").on("click", function() {
+            
+            // Get selected label
+            selYAxis = d3.select(this).attr("value");
+            
+            // Update y linear scale
+            yLinearScale = yScale(csvData, selYAxis, chartHeight);
+
+            // Render axis
+            yAxis = renderYAxes(yLinearScale, yAxis);
+
+            // updates label based on active/inactive YAxis
+            if (selYAxis === "healthcare") {
+                healthcareYAxis
+                    .classed("active", true)
+                    .classed("inactive", false);
+                smokeYAxis
+                    .classed("active", false)
+                    .classed("inactive", true);
+                obesityYAxis
+                    .classed("active", false)
+                    .classed("inactive", true);
+            }
+            else if (selYAxis === "smokes") {
+                healthcareYAxis
+                    .classed("active", false)
+                    .classed("inactive", true);
+                smokeYAxis
+                    .classed("active", true)
+                    .classed("inactive", false);
+                obesityYAxis
+                    .classed("active", false)
+                    .classed("inactive", true);
+            }
+            else {
+                healthcareYAxis
+                    .classed("active", false)
+                    .classed("inactive", true);
+                smokeYAxis
+                    .classed("active", false)
+                    .classed("inactive", true);
+                obesityYAxis
+                    .classed("active", true)
+                    .classed("inactive", false);
+            }
+
+            // Update circles with y values
+            circle = renderCircles(circleGroup, xLinearScale, yLinearScale, selXAxis, selYAxis);
+
+            // Update circles text with y values
+            circleTxt = renderText(circleTxt, xLinearScale, yLinearScale, selXAxis, selYAxis);
+
+            // Update tooltip
+            circleGroup = updateToolTip(selXAxis, selYAxis, circle, circleTxt);
+        });
+
+    }).catch(function(err) {
+        console.log(err);
+    });
 }
 
+// call function to make chart responsive
+responsiveChart();
 
-// // Import CSV data
-//     
-    
-//     
-//     
-
-//     
-
-//     
-
-
-
-//     
-   
-//     
-
-//     // Create tooltips
-//     circleGroup = updateToolTip(circleGroup, selXAxis, selYAxis);
-
-//     // Create event listener for x axis
-//     xAxisLabels.selectAll("text").on("click", function() {
-//         const selection = d3.select(this).attr("value");
-//         // conditionals to change x axis by selection
-//         if (selection !== selXAxis) {
-
-//             // puts "value" on x axis (attribute defined in xAxisLabels and yAxisLabels)
-//             selXAxis = value;
-
-//             // update the scale of x axis based on data
-//             xLinearScale = xScale(csvData, selXAxis);
-
-//             // renders the x axis
-//             xAxis = renderXAxis(xLinearScale, xAxis);
-
-//             // updates circles with new x axis data
-//             circleLoc = renderXCircles(circleLoc, xLinearScale, selXAxis);
-
-//             // updates circle text with new x axis data
-//             circleTxt = renderXText(circleTxt, xLinearScale, selXAxis);
-
-//             // updates tooltip
-//             circleGroup = updateToolTip(circleGroup, selXAxis, selYAxis);
-
-//             // updates label appearance based on active/inactive
-//             if (selXAxis === "age") {
-//                 povertyXAxis
-//                     .classed("active", false)
-//                     .classed("inactive", true);
-//                 ageXAxis
-//                     .classed("active", true)
-//                     .classed("inactive", false);
-//                 incomeXAxis
-//                     .classed("active", false)
-//                     .classed("inactive", true);
-//             }
-//             else if (selXAxis === "income") {
-//                 povertyXAxis
-//                     .classed("active", false)
-//                     .classed("inactive", true);
-//                 ageXAxis
-//                     .classed("active", false)
-//                     .classed("inactive", true);
-//                 incomeXAxis
-//                     .classed("active", true)
-//                     .classed("inactive", false);
-//             }
-//             else {
-//                 povertyXAxis
-//                     .classed("active", true)
-//                     .classed("inactive", false);
-//                 ageXAxis
-//                     .classed("active", false)
-//                     .classed("inactive", true);
-//                 incomeXAxis
-//                     .classed("active", false)
-//                     .classed("inactive", true);
-//             }
-//         }
-//     });
-
-//     // Create event listener for y axis
-//     yAxisLabels.selectAll("text").on("click", function() {
-//         const selection = d3.select(this).attr("value");
-//         // conditionals to change x axis by selection
-//         if (selection !== selYAxis) {
-
-//             // puts "value" on y axis (attribute defined in xAxisLabels and yAxisLabels)
-//             selYAxis = value;
-
-//             // update the scale of x axis based on data
-//             yLinearScale = yScale(csvData, selYAxis);
-
-//             // renders the x axis
-//             yAxis = renderYAxis(yLinearScale, yAxis);
-
-//             // updates circles with new x axis data
-//             circleLoc = renderYCircles(circleLoc, yLinearScale, selYAxis);
-
-//             // updates circle text with new x axis data
-//             circleTxt = renderYText(circleTxt, yLinearScale, selYAxis);
-
-//             // updates tooltip
-//             circleGroup = updateToolTip(circleGroup, selXAxis, selYAxis);
-
-//             // updates label appearance based on active/inactive
-//             if (selYAxis === "smokes") {
-//                 healthcareYAxis
-//                     .classed("active", false)
-//                     .classed("inactive", true);
-//                 smokeYAxis
-//                     .classed("active", true)
-//                     .classed("inactive", false);
-//                 obesityYAxis
-//                     .classed("active", false)
-//                     .classed("inactive", true);
-//             }
-//             else if (selYAxis === "obesity") {
-//                 healthcareYAxis
-//                     .classed("active", false)
-//                     .classed("inactive", true);
-//                 smokeYAxis
-//                     .classed("active", false)
-//                     .classed("inactive", true);
-//                 obesityYAxis
-//                     .classed("active", true)
-//                     .classed("inactive", false);
-//             }
-//             else {
-//                 healthcareYAxis
-//                     .classed("active", true)
-//                     .classed("inactive", false);
-//                 smokeYAxis
-//                     .classed("active", false)
-//                     .classed("inactive", true);
-//                 obesityYAxis
-//                     .classed("active", false)
-//                     .classed("inactive", true);
-//             }
-//         }
-//     });
-// })();
+// call function to make chart responsive upon window size change
+d3.select(window).on("resize", responsiveChart);
